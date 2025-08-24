@@ -1,18 +1,38 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const Home = () => {
   return (
     <>
-      <div class="w-full h-auto text-center py-10 bg-info mt-5">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mt-20">
-          Welcome to <span class="text-yellow-300">ChatBox</span>
-        </h1>
-        <p class="text-lg text-gray-100 mt-3 md:text-2xl justify-center align-middle">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam
-          sint, qui, nemo debitis labore voluptatum voluptatibus officiis fugiat
-          placeat soluta explicabo, consequuntur magni velit blanditiis esse eum
-          vel. Molestias, possimus.
-        </p>
+      <div className="hero min-h-[90vh] bg-gradient-to-b from-primary to-secondary  flex items-center">
+        <div className="max-w-md mx-auto text-primary-content text-center space-y-10">
+          <motion.h1
+            className="text-7xl font-bold "
+            initial={{ y: 100, x: 0 }}
+            animate={{ y: 0, x: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            Welcome to ChatApp
+          </motion.h1>
+          <motion.p
+            className="py-6 "
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 90, scale: 1.5 }}
+            transition={{ duration: 1.1, ease: "easeIn" }}
+          >
+            Connect, chat and collaborate with friends and colleagues in
+            real-time. Experience seamless communication with our modern
+            messaging platform.
+          </motion.p>
+          <motion.button
+            className="btn btn-primary btn-lg"
+            initial={{ y: 40 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.7, ease: "easeIn" }}
+          >
+            Get Started
+          </motion.button>
+        </div>
       </div>
     </>
   );
