@@ -5,7 +5,7 @@ import sendEmail from "../utils/sendEmail.js";
 import genToken from "../utils/auth.js";
 
 const genDummyImage = (name) => {
-    const r = Math.floor(Math.random() * 56) + 200; // 200–255
+    const r = Math.floor(Math.random() * 56) + 200;
     const g = Math.floor(Math.random() * 56) + 200;
     const b = Math.floor(Math.random() * 56) + 200;
 

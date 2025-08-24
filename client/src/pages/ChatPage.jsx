@@ -11,19 +11,16 @@ import { motion } from "framer-motion";
 const ChatPage = () => {
   return (
     <div className="flex h-screen bg-gradient-to-br from-base-100 to-base-200">
-      {/* Sidebar */}
       <div className="w-20 bg-base-200 flex flex-col items-center py-6 space-y-8 shadow-lg">
-        {/* Profile */}
         <motion.div
           whileHover={{ scale: 1.1 }}
           className="avatar cursor-pointer"
         >
           <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src="https://i.pravatar.cc/50?img=1" alt="profile" />
+            {/* <img src="https://i.pravatar.cc/50?img=1" alt="profile" /> */}
           </div>
         </motion.div>
 
-        {/* Menu Icons */}
         <div className="flex flex-col space-y-6 text-xl text-base-content">
           {[MdDashboard, FaUserFriends, FaCalendarAlt, FaComments, FaBell].map(
             (Icon, idx) => (
@@ -39,7 +36,6 @@ const ChatPage = () => {
         </div>
       </div>
 
-      {/* Left Panel */}
       <div className="w-80 border-r border-base-300 flex flex-col bg-base-100 shadow-sm">
         <div className="px-4 py-4 font-bold text-lg border-b border-base-300">
           All Messages
@@ -52,7 +48,7 @@ const ChatPage = () => {
             >
               <div className="avatar">
                 <div className="w-10 rounded-full">
-                  <img src={`https://i.pravatar.cc/50?img=${i + 4}`} alt="" />
+                  {/* <img src={`https://i.pravatar.cc/50?img=${i + 4}`} alt="" /> */}
                 </div>
               </div>
               <div>
@@ -66,11 +62,8 @@ const ChatPage = () => {
         </div>
       </div>
 
-      {/* Chat Area */}
       <div className="flex-1 flex flex-col bg-gradient-to-b from-base-100 to-base-200">
-        {/* Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Floyd */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -78,7 +71,7 @@ const ChatPage = () => {
           >
             <div className="avatar">
               <div className="w-10 rounded-full">
-                <img src="https://i.pravatar.cc/50?img=7" alt="Floyd" />
+                {/* <img src="https://i.pravatar.cc/50?img=7" alt="Floyd" /> */}
               </div>
             </div>
             <div>
@@ -100,7 +93,7 @@ const ChatPage = () => {
           >
             <div className="avatar">
               <div className="w-10 rounded-full">
-                <img src="https://i.pravatar.cc/50?img=8" alt="Guy" />
+                {/* <img src="https://i.pravatar.cc/50?img=8" alt="Guy" /> */}
               </div>
             </div>
             <div>
@@ -113,7 +106,6 @@ const ChatPage = () => {
             </div>
           </motion.div>
 
-          {/* My message */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -133,7 +125,6 @@ const ChatPage = () => {
           </motion.div>
         </div>
 
-        {/* Input Box */}
         <div className="p-4 border-t border-base-300 flex items-center gap-3 bg-base-100">
           <input
             type="text"

@@ -12,9 +12,9 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
-app.use("/auth", AuthRouter);
-app.get("/", (req, res) => {
-    // console.log("Server Working Properly");
+app.use("/api/auth", AuthRouter);
+app.get("/api", (req, res) => {
+
     res.status(200).json({ message: "Chating App Backend is running" });
 });
 
