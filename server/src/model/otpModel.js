@@ -12,9 +12,8 @@ const OtpSchema = mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 600,
+        expires: 600, //time in Seconds
     },
 })
-
 const OTP = mongoose.model('OTP', OtpSchema)
 export default OTP;

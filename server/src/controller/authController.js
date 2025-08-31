@@ -4,8 +4,8 @@ import bcrypt from "bcrypt";
 import sendEmail from "../utils/sendEmail.js";
 import genToken from "../utils/auth.js";
 
-const genDummyImage = (name) => {
-    const r = Math.floor(Math.random() * 56) + 200;
+const genDummyImage = (fullName) => {
+    const r = Math.floor(Math.random() * 56) + 200; // 200–255
     const g = Math.floor(Math.random() * 56) + 200;
     const b = Math.floor(Math.random() * 56) + 200;
 
@@ -13,14 +13,14 @@ const genDummyImage = (name) => {
         .toString(16)
         .slice(1)}`;
 
-    return `https://ui-avatars.com/api/?name=${name.charAt(
+    return `https://ui-avatars.com/api/?name=${fullName.charAt(
         0
     )}&background=${randomColor}&color=fff&size=360`;
 };
 
-export const SignUp = async (req, res, next) => {
+export const Register = async (req, res, next) => {
     try {
-        const { name, email, password, otp } = req.body;
+        const { fullName, email, password, otp } = req.body;
 
         const fetchOtp = await OTP.findOne({ email });
         if (fetchOtp) {
@@ -38,12 +38,12 @@ export const SignUp = async (req, res, next) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const photo = `https://ui-avatars.com/api/?name=${name.charAt(
+        const photo = `https://ui-avatars.com/api/?name=${fullName.charAt(
             0
         )}&background=random&color=fff&size=360`;
 
         const user = await User.create({
-            name,
+            fullName,
             email,
             password: hashedPassword,
             type: "normalUser",
@@ -57,6 +57,7 @@ export const SignUp = async (req, res, next) => {
         next(error);
     }
 };
+
 export const Login = async (req, res, next) => {
     try {
         console.log("Starting Login");
@@ -106,19 +107,17 @@ export const Login = async (req, res, next) => {
 
         res.status(200).json({
             message: "Login successful",
-            user: existingUser,
+            data: existingUser,
         });
     } catch (error) {
         next(error);
     }
 };
 
-export const GoogleLogin = async (req, res, next) => { };
-
 export const SendOTPForRegister = async (req, res, next) => {
     try {
-        const { name, email, password } = req.body;
-        if (!name || !email || !password) {
+        const { fullName, email, password } = req.body;
+        if (!fullName || !email || !password) {
             const error = new Error("Please fill all the fields");
             error.statusCode = 400;
             return next(error);
@@ -204,13 +203,7 @@ export const SendOTPForLogin = async (req, res, next) => {
         if (existingUser.TwoFactorAuth === "false") {
             req.body.otp = "N/A";
             console.log("Starting Login");
-            if (existingUser.type === "normalUser") {
-                console.log("Logging in normal user");
-                return Login(req, res, next);
-            } else {
-                console.log("Logging in Google user");
-                return GoogleLogin(req, res, next);
-            }
+            return Login(req, res, next);
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000);
@@ -249,6 +242,76 @@ export const SendOTPForLogin = async (req, res, next) => {
         res.status(200).json({
             message: "OTP sent successfully",
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const Logout = (req, res, next) => {
+    try {
+        res.clearCookie("token");
+        res.status(200).json({ message: "Logout Successful" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const GoogleLogin = async (req, res, next) => {
+    try {
+        const fullName = req.body.name;
+        const email = req.body.email;
+        const Gid = req.body.id;
+
+        //const { fullName: name, email, Gid: id } = req.body;
+
+        if (!fullName || !email || !Gid) {
+            const error = new Error("All fields Required");
+            error.statusCode = 400;
+            return next(error);
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (!existingUser) {
+            const hashedId = await bcrypt.hash(Gid, 10);
+            const photo = `https://ui-avatars.com/api/?name=${fullName.charAt(
+                0
+            )}&background=random&color=fff&size=360`;
+
+            const newUser = await User.create({
+                fullName,
+                email,
+                googleId: hashedId,
+                type: "googleUser",
+                photo,
+            });
+            genToken(newUser, res);
+            res.status(200).json({ message: "Login Sucessfully", data: newUser });
+        } else if (existingUser && existingUser.type === "normalUser") {
+            const hashedId = await bcrypt.hash(Gid, 10);
+
+            existingUser.googleId = hashedId;
+            existingUser.type = "googleUser";
+
+            await existingUser.save();
+            genToken(existingUser, res);
+
+            res
+                .status(200)
+                .json({ message: "Login Sucessfully", data: existingUser });
+        } else {
+            const isVerified = await bcrypt.compare(Gid, existingUser.googleId);
+            if (!isVerified) {
+                const error = new Error("Invalid credentials");
+                error.statusCode = 401;
+                return next(error);
+            }
+
+            genToken(existingUser, res);
+
+            res
+                .status(200)
+                .json({ message: "Login Sucessfully", data: existingUser });
+        }
     } catch (error) {
         next(error);
     }

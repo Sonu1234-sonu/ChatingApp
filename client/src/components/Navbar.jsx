@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { user, isLogin } = useAuth();
   const [selectedTheme, setSelectedTheme] = useState(
     sessionStorage.getItem("theme") || "light"
   );
@@ -34,9 +36,25 @@ const Navbar = () => {
           <Link to="/">Home</Link>
           <Link to="/about">About</Link>
           <Link to="/contact">Contact</Link>
-          <Link to="/chat">Chat</Link>
-          <Link to="/signup">Signup</Link>
-          <Link to="/login">Login</Link>
+
+          {isLogin && user ? (
+            <>
+              <Link to="/chat">Chat</Link>
+              <Link to="/dashboard">
+                <div className="flex gap-3 items-center me-5">
+                  <img
+                    src={user.photo}
+                    alt=""
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                  <span>{user?.fullName?.split(" ")[0] || "User"}</span>
+                </div>
+              </Link>
+            </>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
+
           <select
             name="theme"
             value={selectedTheme}
@@ -48,7 +66,7 @@ const Navbar = () => {
               );
               sessionStorage.setItem("theme", e.target.value);
             }}
-            className="select select-bordered w-full border-secondary bg-base-100 text-base-content focus:ring-2 focus:ring-secondary"
+            className="select select-bordered w-1/3 border-secondary bg-base-100 text-base-content focus:ring focus:ring-secondary"
           >
             <option value="light">Light</option>
             <option value="dark">Dark</option>

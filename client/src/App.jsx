@@ -1,14 +1,15 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/login";
 import Home from "./pages/Home";
-import Signup from "./pages/Signup";
-import About from "./pages/Contact";
+import About from "./pages/About";
+import Contact from "./pages/ContactUs";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 import { Toaster } from "react-hot-toast";
-import ChatPage from "./pages/ChatPage";
 import Dashboard from "./pages/Dashboard";
-import Contact from "./pages/Contact";
+import ChatPage from "./pages/ChatPage";
+
 const App = () => {
   return (
     <>
@@ -19,7 +20,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chat" element={<ChatPage />} />

@@ -2,41 +2,37 @@ import mongoose from "mongoose";
 
 const UserSchema = mongoose.Schema(
     {
-        name: {
+        fullName: {
             type: String,
-            require: true,
-        },
-        email: {
-            type: String,
-            require: true,
-            unique: true,
+            required: true,
         },
         password: {
             type: String,
-
         },
         googleId: {
             type: String,
-
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
         },
         photo: {
             type: String,
-            default: "",
-
+            default: ""
         },
         TwoFactorAuth: {
             type: String,
             default: "false",
-
         },
         type: {
             type: String,
             enum: ["normalUser", "googleUser"],
-
         },
-
-
-    }, { timestamps: true });
-
+    },
+    {
+        timestamps: true,
+    }
+);
 const User = mongoose.model("User", UserSchema);
 export default User;

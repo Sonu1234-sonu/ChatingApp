@@ -1,34 +1,47 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import Api from "../../config/api";
+import API from "../../config/Api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const OTPModal = ({ isOpen, onClose, callingPage, data }) => {
   const navigate = useNavigate();
+  const { setUser, setIsLogin } = useAuth();
 
   const [otp, setOtp] = useState("");
+
   const handleOTPSubmit = async () => {
-    data.otp = otp;
+    // Handle OTP submission logic here
+    data.otp = otp; // Attach OTP to data
     console.log("OTP data:", data);
 
     console.log("OTP submitted:", otp);
 
     try {
       let res;
-      if (callingPage === "signup") {
-        res = await Api.post("/auth/signup", data);
+      if (callingPage === "register") {
+        res = await API.post("/auth/register", data);
       } else {
-        res = await Api.post("/auth/login", data);
+        res = await API.post("/auth/login", data);
+        setUser(res.data.data);
+        setIsLogin(true);
+        sessionStorage.setItem("ChatUser", JSON.stringify(res.data.data));
       }
 
       toast.success(res.data.message);
       onClose();
       callingPage === "register" ? navigate("/login") : navigate("/dashboard");
     } catch (error) {
-      toast.error("Error Creating account");
+      toast.error(
+        `Error : ${error.response?.status || error.message} | ${
+          error.response?.data.message || ""
+        }`
+      );
     }
   };
+
   if (!isOpen) return null;
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50  flex items-center justify-center z-20">
