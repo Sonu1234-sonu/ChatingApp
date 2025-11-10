@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import Chatting from "../components/Chatting";
 import api from "../config/Api";
 import socketAPI from "../config/WebSocket";
+import { toast } from "react-hot-toast";
 
 const ChatPage = () => {
   const { user, isLogin } = useAuth();
   const navigate = useNavigate();
-  const [users, setUsers] = useState("");
-
+  const [users, setUsers] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState("");
 
   const fetchAllUser = async () => {
@@ -17,7 +17,7 @@ const ChatPage = () => {
       const res = await api.get("/user/allUsers");
       setUsers(res.data.data);
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Error during fetching users:", error);
       toast.error(
         `Error : ${error.response?.status || error.message} | ${
           error.response?.data.message || ""
@@ -31,7 +31,6 @@ const ChatPage = () => {
       navigate("/login");
     } else {
       fetchAllUser();
-
       socketAPI.emit("CreatePath", user._id);
     }
 
@@ -41,42 +40,68 @@ const ChatPage = () => {
   }, [user, isLogin, navigate]);
 
   return (
-    <>
-      <div className="min-h-screen bg-base-100 flex">
-        <div className="w-3/14 border px-5 pt-5">
-          <div className="flex gap-3 items-center">
-            <img src={user.photo} alt="" className="w-14 h-14 rounded" />
-            <div className="flex flex-col">
-              <span className="text-2xl text-primary">{user.fullName}</span>
-              <span className="text-sm text-secondary">{user.email}</span>
+    <div className="min-h-screen bg-base-200 flex">
+      {/* Sidebar */}
+      <div className="w-1/4 border-r border-base-300 bg-base-100 shadow-lg flex flex-col">
+        {/* Current User */}
+        <div className="flex gap-4 items-center p-4 border-b border-base-300">
+          <div className="avatar">
+            <div className="w-14 h-14 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              <img src={user?.photo || "/default-avatar.png"} alt="me" />
             </div>
           </div>
-          <div className="divider divider-primary pt-5"></div>
-          <div id="Firend_List">
+          <div>
+            <h2 className="text-xl font-semibold text-primary">
+              {user?.fullName}
+            </h2>
+            <p className="text-sm text-secondary">{user?.email}</p>
+          </div>
+        </div>
+
+        {/* Friends List */}
+        <div className="flex-1 overflow-y-auto p-3">
+          <h3 className="text-sm font-bold text-secondary mb-2">Friends</h3>
+          <div className="space-y-2">
             {users &&
               users.map((element, index) => (
                 <div
                   key={index}
-                  className="group flex gap-3 items-center m-3 bg-secondary p-2 text-secondary-content rounded hover:bg-primary hover:text-primary-content"
-                  onClick={() => {
-                    setSelectedFriend(element);
-                  }}
+                  className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition 
+            ${
+              selectedFriend?._id === element._id
+                ? "bg-primary text-primary-content"
+                : "bg-base-200 hover:bg-primary hover:text-primary-content"
+            }`}
+                  onClick={() => setSelectedFriend(element)}
                 >
-                  <img
-                    src={element.photo}
-                    alt=""
-                    className="w-12 h-12 rounded-full border border-primary group-hover:border-error"
-                  />
-                  <span className="text-lg">{element.fullName}</span>
+                  <div className="avatar">
+                    <div className="w-12 h-12 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
+                      <img
+                        src={element.photo || "/default-avatar.png"}
+                        alt={element.fullName}
+                      />
+                    </div>
+                  </div>
+                  <span className="text-lg font-medium">
+                    {element.fullName}
+                  </span>
                 </div>
               ))}
           </div>
         </div>
-        <div className="w-11/14 border">
-          <Chatting friend={selectedFriend} />
-        </div>
       </div>
-    </>
+
+      {/* Chatting Area */}
+      <div className="flex-1 flex flex-col">
+        {selectedFriend ? (
+          <Chatting friend={selectedFriend} />
+        ) : (
+          <div className="flex items-center justify-center flex-1 text-gray-400 text-lg">
+            👋 Select a friend to start chatting
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

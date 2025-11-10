@@ -1,11 +1,10 @@
 import React from "react";
+import Spline from "@splinetool/react-spline";
 
-const About = () => {
+export default function Home() {
   return (
-    <>
-      <h1>about</h1>
-    </>
+    <main className="w-full h-screen">
+      <Spline scene="https://prod.spline.design/vsbNwoHzILy3fd-F/scene.splinecode" />
+    </main>
   );
-};
-
-export default About;
+}
