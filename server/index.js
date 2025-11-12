@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
     // You can handle socket events here
 });
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "https://chatingapplication1.netlify.app", credentials: true }));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
