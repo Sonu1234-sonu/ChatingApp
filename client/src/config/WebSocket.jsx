@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const socketAPI = io("https://chating-app-64a7.vercel.app", {
+const socketAPI = io("http://localhost:4500", {
   withCredentials: true,
 });
 
