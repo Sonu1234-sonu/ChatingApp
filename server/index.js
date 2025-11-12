@@ -8,6 +8,7 @@ import express from "express";
 import connectDB from "./src/config/db.js";
 import cookieParser from "cookie-parser";
 import userRoutes from "./src/routes/userRoutes.js";
+
 import http from "http";
 import { Server } from "socket.io";
 
@@ -33,6 +34,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", userRoutes);
+
 
 app.get("/api", (req, res) => {
     res.status(200).json({ message: "Chating App Backend is running" });
