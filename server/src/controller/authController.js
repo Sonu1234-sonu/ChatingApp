@@ -285,7 +285,7 @@ export const GoogleLogin = async (req, res, next) => {
                 photo,
             });
             genToken(newUser, res);
-            res.status(200).json({ message: "Login Sucessfully", data: newUser });
+            return res.status(200).json({ message: "Login Sucessfully", data: newUser });
         } else if (existingUser && existingUser.type === "normalUser") {
             const hashedId = await bcrypt.hash(Gid, 10);
 
@@ -294,8 +294,7 @@ export const GoogleLogin = async (req, res, next) => {
 
             await existingUser.save();
             genToken(existingUser, res);
-
-            res
+            return res
                 .status(200)
                 .json({ message: "Login Sucessfully", data: existingUser });
         } else {
@@ -308,7 +307,7 @@ export const GoogleLogin = async (req, res, next) => {
 
             genToken(existingUser, res);
 
-            res
+            return res
                 .status(200)
                 .json({ message: "Login Sucessfully", data: existingUser });
         }

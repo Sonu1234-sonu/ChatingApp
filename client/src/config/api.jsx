@@ -1,6 +1,6 @@
 import axios from "axios";
 const api = axios.create({
-  baseURL: "http://localhost:4500/api",
+  baseURL: "https://chating-app-64a7.vercel.app/api",
   withCredentials: true,
 });
 export default api;
